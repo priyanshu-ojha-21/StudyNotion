@@ -127,7 +127,7 @@ For detailed API documentation and endpoints, refer to the [API Documentation](/
 2. Open a new terminal and navigate to the `client` directory: `cd client`
 3. Start the React development server: `npm start`
 
-Access the application in your browser at `http://localhost:3000`.
+Access the application in your browser at `https://study-notion-priyanshu-ojha.vercel.app`.
 
 
 
