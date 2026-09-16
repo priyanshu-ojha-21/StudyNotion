@@ -3,27 +3,33 @@ const nodemailer = require("nodemailer");
 const mailSender = async (email, title, body) => {
     try {
         let transporter = nodemailer.createTransport({
-            host: process.env.MAIL_HOST,
+            host: process.env.MAIL_HOST, // smtp-relay.brevo.com
             port: 587,
             secure: false,
             auth: {
-                user: process.env.MAIL_USER,
-                pass: process.env.MAIL_PASS,
-            }
-        })
+                user: process.env.MAIL_USER, // Brevo Login Email
+                pass: process.env.MAIL_PASS, // Brevo SMTP Key (xsmtpsib-...)
+            },
+            // Render cloud par connection latakne se rokne ke liye:
+            connectionTimeout: 10000,
+            greetingTimeout: 10000,
+            socketTimeout: 10000,
+        });
 
         let info = await transporter.sendMail({
-            from: 'StudyNotion || CodeHelp - by Babbar',
+            // ⚠️ FIX: Display Name ke sath valid Sender Email add karna zaroori hai
+            from: `StudyNotion <ojhap259@gmail.com>`, 
             to: `${email}`,
             subject: `${title}`,
             html: `${body}`,
-        })
-        console.log(info);
+        });
+
+        console.log("Email info:", info);
         return info;
     }
     catch(error) {
-        console.log(error.message);
-        return null;   // ✅ explicit return, undefined nahi rahega implicitly confusing
+        console.log("Mail send failed:", error.message);
+        return null;
     }
 }
 
