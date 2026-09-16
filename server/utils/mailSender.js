@@ -1,36 +1,33 @@
-const nodemailer = require("nodemailer");
-
 const mailSender = async (email, title, body) => {
     try {
-        let transporter = nodemailer.createTransport({
-            host: process.env.MAIL_HOST, // smtp-relay.brevo.com
-            port: 465,
-            secure: true,
-            auth: {
-                user: process.env.MAIL_USER, // Brevo Login Email
-                pass: process.env.MAIL_PASS, // Brevo SMTP Key (xsmtpsib-...)
+        const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+            method: "POST",
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json",
+                "api-key": process.env.BREVO_API_KEY,
             },
-            // Render cloud par connection latakne se rokne ke liye:
-            connectionTimeout: 10000,
-            greetingTimeout: 10000,
-            socketTimeout: 10000,
+            body: JSON.stringify({
+                sender: { name: "StudyNotion", email: "ojhap259@gmail.com" },
+                to: [{ email: email }],
+                subject: title,
+                htmlContent: body,
+            }),
         });
 
-        let info = await transporter.sendMail({
-            // ⚠️ FIX: Display Name ke sath valid Sender Email add karna zaroori hai
-            from: `StudyNotion <ojhap259@gmail.com>`, 
-            to: `${email}`,
-            subject: `${title}`,
-            html: `${body}`,
-        });
+        const data = await response.json();
 
-        console.log("Email info:", info);
-        return info;
-    }
-    catch(error) {
+        if (!response.ok) {
+            console.log("Mail send failed via Brevo API:", data);
+            return null;
+        }
+
+        console.log("Email sent successfully via API:", data);
+        return data;
+    } catch (error) {
         console.log("Mail send failed:", error.message);
         return null;
     }
-}
+};
 
 module.exports = mailSender;
