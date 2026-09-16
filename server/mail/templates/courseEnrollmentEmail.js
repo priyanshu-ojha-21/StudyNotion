@@ -67,7 +67,7 @@ exports.courseEnrollmentEmail = (courseName, name) => {
     
     <body>
         <div class="container">
-            <a href="http://localhost:3000"><img class="logo" src="https://res.cloudinary.com/dnrcf5lv7/image/upload/v1789551205/rzp_logo_szw5sa.png"
+            <a href="https://study-notion-priyanshu-ojha.vercel.app"><img class="logo" src="https://res.cloudinary.com/dnrcf5lv7/image/upload/v1789551205/rzp_logo_szw5sa.png"
                     alt="StudyNotion Logo"></a>
             <div class="message">Course Registration Confirmation</div>
             <div class="body">
@@ -76,7 +76,7 @@ exports.courseEnrollmentEmail = (courseName, name) => {
                     are excited to have you as a participant!</p>
                 <p>Please log in to your learning dashboard to access the course materials and start your learning journey.
                 </p>
-                <a class="cta" href="http://localhost:3000/dashboard">Go to Dashboard</a>
+                <a class="cta" href="https://study-notion-priyanshu-ojha.vercel.app/dashboard">Go to Dashboard</a>
             </div>
             <div class="support">If you have any questions or need assistance, please feel free to reach out to us at <a
                     href="mailto:info@studynotion.com">info@studynotion.com</a>. We are here to help!</div>

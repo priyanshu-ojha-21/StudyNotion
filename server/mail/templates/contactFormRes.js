@@ -74,7 +74,7 @@ exports.contactUsEmail = (
     
     <body>
         <div class="container">
-            <a href="http://localhost:3000"><img class="logo"
+            <a href="https://study-notion-priyanshu-ojha.vercel.app"><img class="logo"
                     src="https://res.cloudinary.com/dnrcf5lv7/image/upload/v1789551205/rzp_logo_szw5sa.png" alt="StudyNotion Logo"></a>
             <div class="message">Contact Form Confirmation</div>
             <div class="body">
