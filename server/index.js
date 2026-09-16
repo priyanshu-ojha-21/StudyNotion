@@ -1,4 +1,8 @@
 const express = require("express");
+
+const dotenv = require("dotenv");
+dotenv.config();
+
 const app = express();
 
 const userRoutes = require("./routes/User");
@@ -11,9 +15,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const {cloudinaryConnect } = require("./config/cloudinary");
 const fileUpload = require("express-fileupload");
-const dotenv = require("dotenv");
 
-dotenv.config();
 const PORT = process.env.PORT || 4000;
 
 //database connect

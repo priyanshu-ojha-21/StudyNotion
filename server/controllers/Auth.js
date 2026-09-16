@@ -62,13 +62,13 @@ exports.signup = async (req, res) => {
       // OTP not found for the email
       return res.status(400).json({
         success: false,
-        message: "The OTP is not valid",
+        message: "OTP Expired or Not Found in Database",
       })
-    } else if (otp !== response[0].otp) {
+    } else if (String(otp).trim() !== String(response[0].otp).trim()) {
       // Invalid OTP
       return res.status(400).json({
         success: false,
-        message: "The OTP is not valid",
+        message: "OTP Does Not Match",
       })
     }
 
@@ -76,8 +76,7 @@ exports.signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10)
 
     // Create the user
-    let approved = ""
-    approved === "Instructor" ? (approved = false) : (approved = true)
+    const approved = accountType === "Instructor" ? false : true;
 
     // Create the Additional Profile For User
     const profileDetails = await Profile.create({
@@ -86,6 +85,9 @@ exports.signup = async (req, res) => {
       about: null,
       contactNumber: null,
     })
+
+    const profileImageUrl = `https://api.dicebear.com/5.x/initials/svg?seed=${firstName}%20${lastName}`;
+
     const user = await User.create({
       firstName,
       lastName,
@@ -95,7 +97,7 @@ exports.signup = async (req, res) => {
       accountType: accountType,
       approved: approved,
       additionalDetails: profileDetails._id,
-      image: "",
+      image: profileImageUrl, 
     })
 
     return res.status(200).json({
@@ -202,14 +204,13 @@ exports.sendotp = async (req, res) => {
       lowerCaseAlphabets: false,
       specialChars: false,
     })
-    const result = await OTP.findOne({ otp: otp })
+    let result = await OTP.findOne({ otp: otp }); 
     console.log("Result is Generate OTP Func")
     console.log("OTP", otp)
     console.log("Result", result)
     while (result) {
-      otp = otpGenerator.generate(6, {
-        upperCaseAlphabets: false,
-      })
+      otp = otpGenerator.generate(6, { upperCaseAlphabets: false });
+      result = await OTP.findOne({ otp: otp }); // Loop ke andar wapas check kar
     }
     const otpPayload = { email, otp }
     const otpBody = await OTP.create(otpPayload)

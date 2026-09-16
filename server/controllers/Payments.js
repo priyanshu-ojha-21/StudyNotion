@@ -35,7 +35,8 @@ exports.capturePayment = async (req, res) => {
 
       // Check if the user is already enrolled in the course
       const uid = new mongoose.Types.ObjectId(userId)
-      if (course.studentsEnroled.includes(uid)) {
+      // ✅  safe check laga diya
+      if (course.studentsEnrolled && course.studentsEnrolled.includes(uid)) { 
         return res
           .status(200)
           .json({ success: false, message: "Student is already Enrolled" })
@@ -54,6 +55,11 @@ exports.capturePayment = async (req, res) => {
     currency: "INR",
     receipt: Math.random(Date.now()).toString(),
   }
+
+  // console.log("=== RAZORPAY DEBUG ===");
+  // console.log("KEY:", process.env.RAZORPAY_KEY);
+  // console.log("SECRET:", process.env.RAZORPAY_SECRET);
+  // console.log("======================");
 
   try {
     // Initiate the payment using Razorpay
@@ -151,7 +157,7 @@ const enrollStudents = async (courses, userId, res) => {
       // Find the course and enroll the student in it
       const enrolledCourse = await Course.findOneAndUpdate(
         { _id: courseId },
-        { $push: { studentsEnroled: userId } },
+        { $push: { studentsEnrolled: userId } },
         { new: true }
       )
 
