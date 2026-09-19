@@ -79,13 +79,16 @@ exports.deleteAccount = async (req, res) => {
         { new: true }
       )
     }
+
+    await CourseProgress.deleteMany({ userId: id })
+
     // Now Delete User
     await User.findByIdAndDelete({ _id: id })
     res.status(200).json({
       success: true,
       message: "User deleted successfully",
     })
-    await CourseProgress.deleteMany({ userId: id })
+    
   } catch (error) {
     console.log(error)
     res
@@ -129,13 +132,15 @@ exports.updateDisplayPicture = async (req, res) => {
       { _id: userId },
       { image: image.secure_url },
       { new: true }
-    )
+    ).populate("additionalDetails");
+    
     res.send({
       success: true,
       message: `Image Updated successfully`,
       data: updatedProfile,
     })
   } catch (error) {
+    console.log("UPDATE DISPLAY PICTURE ERROR:", error)   // ✅ add kiya
     return res.status(500).json({
       success: false,
       message: error.message,

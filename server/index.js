@@ -30,12 +30,19 @@ app.use(
 	})
 )
 
+// app.use(
+// 	fileUpload({
+// 		useTempFiles:true,
+// 		tempFileDir:"/tmp",
+// 	})
+// )
+
 app.use(
 	fileUpload({
-		useTempFiles:true,
-		tempFileDir:"/tmp",
+		useTempFiles: true,
 	})
 )
+
 //cloudinary connection
 cloudinaryConnect();
 

@@ -21,8 +21,7 @@ export function updateDisplayPicture(token, formData) {
         UPDATE_DISPLAY_PICTURE_API,
         formData,
         {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,   // ✅ sirf Authorization rakh, Content-Type hata de
         }
       )
       console.log(
@@ -34,7 +33,8 @@ export function updateDisplayPicture(token, formData) {
         throw new Error(response.data.message)
       }
       toast.success("Display Picture Updated Successfully")
-      dispatch(setUser(response.data.data))
+      dispatch(setUser(response.data.data));
+      localStorage.setItem("user", JSON.stringify(response.data.data))
     } catch (error) {
       console.log("UPDATE_DISPLAY_PICTURE_API API ERROR............", error)
       toast.error("Could Not Update Display Picture")

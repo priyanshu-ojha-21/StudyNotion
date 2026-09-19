@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from "react"
 import ReactStars from "react-rating-stars-component"
-// Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react"
 
-// Import Swiper styles
 import "swiper/css"
 import "swiper/css/free-mode"
 import "swiper/css/pagination"
 import "../../App.css"
-// Icons
 import { FaStar } from "react-icons/fa"
-// Import required modules
 import { Autoplay, FreeMode, Pagination } from "swiper"
 
-// Get apiFunction and the endpoint
 import { apiConnector } from "../../services/apiconnector"
 import { ratingsEndpoints } from "../../services/apis"
 
@@ -28,32 +23,47 @@ function ReviewSlider() {
         ratingsEndpoints.REVIEWS_DETAILS_API
       )
       if (data?.success) {
-        setReviews(data?.data)
+        // filter out reviews jinke user ya course delete ho chuke hain
+        const validReviews = data?.data?.filter(
+          (review) => review?.user && review?.course
+        )
+        setReviews(validReviews)
       }
     })()
   }, [])
 
-  // console.log(reviews)
+  if (!reviews.length) return null
 
   return (
     <div className="text-white">
-      <div className="my-[50px] h-[184px] max-w-maxContentTab lg:max-w-maxContent">
+      <div className="mx-auto my-[50px] w-11/12 max-w-maxContentTab overflow-hidden lg:max-w-maxContent">
         <Swiper
-          slidesPerView={4}
-          spaceBetween={25}
-          loop={true}
+          slidesPerView={1}
+          spaceBetween={20}
+          loop={false}
           freeMode={true}
           autoplay={{
             delay: 2500,
             disableOnInteraction: false,
           }}
+          breakpoints={{
+            640: {
+              slidesPerView: 2,
+            },
+            1024: {
+              slidesPerView: 3,
+            },
+            1280: {
+              slidesPerView: 4,
+            },
+          }}
           modules={[FreeMode, Pagination, Autoplay]}
-          className="w-full "
+          className="w-full"
         >
           {reviews.map((review, i) => {
             return (
-              <SwiperSlide key={i}>
-                <div className="flex flex-col gap-3 bg-richblack-800 p-3 text-[14px] text-richblack-25">
+              <SwiperSlide key={review?._id || i}>
+                <div className="flex h-full flex-col gap-3 bg-richblack-800 p-4 text-[14px] text-richblack-25">
                   <div className="flex items-center gap-4">
                     <img
                       src={
@@ -62,11 +72,11 @@ function ReviewSlider() {
                           : `https://api.dicebear.com/5.x/initials/svg?seed=${review?.user?.firstName} ${review?.user?.lastName}`
                       }
                       alt=""
-                      className="h-9 w-9 rounded-full object-cover"
+                      className="h-9 w-9 flex-shrink-0 rounded-full object-cover"
                     />
-                    <div className="flex flex-col">
-                      <h1 className="font-semibold text-richblack-5">{`${review?.user?.firstName} ${review?.user?.lastName}`}</h1>
-                      <h2 className="text-[12px] font-medium text-richblack-500">
+                    <div className="flex flex-col overflow-hidden">
+                      <h1 className="truncate font-semibold text-richblack-5">{`${review?.user?.firstName} ${review?.user?.lastName}`}</h1>
+                      <h2 className="truncate text-[12px] font-medium text-richblack-500">
                         {review?.course?.courseName}
                       </h2>
                     </div>
@@ -79,7 +89,7 @@ function ReviewSlider() {
                           .join(" ")} ...`
                       : `${review?.review}`}
                   </p>
-                  <div className="flex items-center gap-2 ">
+                  <div className="flex items-center gap-2">
                     <h3 className="font-semibold text-yellow-100">
                       {review.rating.toFixed(1)}
                     </h3>
@@ -97,7 +107,6 @@ function ReviewSlider() {
               </SwiperSlide>
             )
           })}
-          {/* <SwiperSlide>Slide 1</SwiperSlide> */}
         </Swiper>
       </div>
     </div>
